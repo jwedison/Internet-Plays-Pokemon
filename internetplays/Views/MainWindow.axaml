@@ -1,0 +1,96 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:internetplays.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="550" d:DesignHeight="800"
+        x:Class="internetplays.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="internetplays"
+        Width="550"
+        Height="800">
+    <Panel>
+        <Border Background="{DynamicResource TwitchBackground}">
+            <Grid RowDefinitions="Auto, *">
+                <Border Grid.Row="0">
+                    <Grid RowDefinitions="Auto, Auto, *">
+                        <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Text="Type in chat to play" FontSize="36"/>
+                        <TextBlock Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Center" Text="A*5 presses A 5 times" FontSize="36"/>
+                        <Grid ColumnDefinitions="Auto, *" Grid.Row="2">
+                            <Button Cursor="Hand" Padding="0" Background="Transparent" Margin="10">
+                                <Image Grid.Column="0"  Width="120" Height="120" Source="{Binding SelectedGame.Image}" />
+                                <Button.Flyout>
+                                    <Flyout>
+                                        <ListBox ItemsSource="{Binding Games}" SelectedItem="{Binding SelectedGame}">
+                                            <ListBox.ItemTemplate>
+                                              <DataTemplate>
+                                                <Grid ColumnDefinitions="Auto, *">
+                                                   <Image Grid.Column="0" Width="40" Height="40" Source="{Binding Image}"/>
+                                                    <StackPanel Grid.Column="1">
+                                                        <TextBlock FontSize="12" Padding="16, 0, 0, 0" Text="{Binding GameName}"/>
+                                                        <TextBlock FontSize="12" Padding="16, 0, 0, 0" Foreground="#A9A9A9" Text="{Binding Console}"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                              </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>  
+                                    </Flyout>
+                                </Button.Flyout>
+                            </Button>
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="5">
+                                <TextBlock Foreground="Gold" HorizontalAlignment="Left" FontWeight="SemiBold" FontSize="24" Text="Current Game"/>
+                                <TextBlock Foreground="White" HorizontalAlignment="Left" FontSize="24" Text="{Binding SelectedGame.GameName}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="1" Background="#222831">
+                    <ScrollViewer x:Name="ChatScroller" VerticalScrollBarVisibility="Hidden">
+                        <ItemsControl x:Name="ChatMessages" ItemsSource="{Binding ChatService.Messages}" Padding="10" VerticalAlignment="Bottom">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border>
+                                        <Grid ColumnDefinitions="Auto, Auto, *">
+                                            <TextBlock Grid.Column="0" Foreground="{Binding UsernameColor}" Text="{Binding Username}" FontSize="24" FontWeight="SemiBold" />
+                                            <TextBlock Grid.Column="1" Text=":" FontSize="24"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding Message}" Margin="16, 0, 0, 0" FontSize="24" TextWrapping="Wrap"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+        </Border>
+        <Popup Placement="Center" IsOpen="{Binding SettingsOpen}">
+            <Border Background="Black" MinWidth="210">
+                <Grid RowDefinitions="Auto, Auto, Auto, Auto">
+                    <DockPanel Grid.Row="0" LastChildFill="False">
+                        <TextBlock DockPanel.Dock="Left" Text="Settings" FontSize="24" FontWeight="SemiBold" Margin="10"/>
+                        <Button DockPanel.Dock="Right" Content="X" Command="{Binding CloseSettingsCommand}" Margin="10"/>
+                    </DockPanel>
+                    <StackPanel Grid.Row="1">
+                        <TextBlock Text="Streaming Service" FontSize="16" Margin="10"/>
+                        <ComboBox ItemsSource="{Binding ChatServices}" SelectedValue="{Binding SettingsOptions.SelectedService}" Margin="10, 1"> 
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" FontSize="16" />
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2">       
+                        <TextBlock Text="Channel Username" FontSize="16" Margin="10"/>
+                        <TextBox Text="{Binding SettingsOptions.Username}" FontSize="16" Margin="10, 1"/> 
+                    </StackPanel>
+                    <Button Grid.Row="3" Background="RoyalBlue" Content="Save Settings" Margin="10" Command="{Binding SaveSettingsCommand}"/>
+                </Grid>
+            </Border>
+        </Popup>
+    </Panel>
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+," Command="{Binding OpenSettingsCommand}" />
+    </Window.KeyBindings>
+</Window>
