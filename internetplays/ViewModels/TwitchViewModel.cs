@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using internetplays.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic;
 using TwitchLib.Client;
@@ -22,7 +23,7 @@ public partial class TwitchViewModel : ChatServiceViewModel
     [ObservableProperty]
     private bool _isConnected = false;
 
-    public TwitchViewModel(string username, string? oauth = null) : base(username)
+    public TwitchViewModel(string username, IChatLogger? chatLogger) : base(username, chatLogger)
     {
         Messages = new();
 
@@ -60,6 +61,7 @@ public partial class TwitchViewModel : ChatServiceViewModel
         var msg = new MessageViewModel(message.Username, message.Message, message.HexColor);
 
         Messages.Add(msg);
+        _chatLogger?.LogMessage(msg.ToString());
 
         await HandleCommand(msg);
     }

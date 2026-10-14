@@ -25,4 +25,9 @@ public partial class MessageViewModel : ViewModelBase
         Message = message;
         UsernameColor = color;
     }
+
+    public override string ToString()
+    {
+        return $"{Username}: {Message}";
+    }
 }

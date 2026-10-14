@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using internetplays.Services;
 using Microsoft.Extensions.Logging;
 using YTLiveChat.Contracts;
 using YTLiveChat.Contracts.Models;
@@ -18,7 +19,7 @@ public partial class YoutubeViewModel : ChatServiceViewModel
     private IYTLiveChat _chatClient;
 
 
-    public YoutubeViewModel(string username) : base(username)
+    public YoutubeViewModel(string username, IChatLogger? chatLogger) : base(username, chatLogger)
     {
         Messages = new();
 
@@ -49,6 +50,7 @@ public partial class YoutubeViewModel : ChatServiceViewModel
             var textColor = message.IsModerator ? "#5474cc" : message.IsOwner ? "#fcd330" : "#FFFFFF";
             var msg = new MessageViewModel(username, messageText, textColor);
 
+            _chatLogger?.LogMessage(msg.ToString());
             Messages.Add(msg);
             await HandleCommand(msg);
         }

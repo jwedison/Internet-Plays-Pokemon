@@ -8,6 +8,7 @@ using System.Text.Json;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using internetplays.Services;
 
 namespace internetplays.ViewModels;
 
@@ -36,9 +37,12 @@ public partial class MainViewModel : ViewModelBase
         SettingsDir,
         "settings.json");
 
+    private IChatLogger _chatLogger;
 
-    public MainViewModel()
+
+    public MainViewModel(IChatLogger chatLogger)
     {
+        _chatLogger = chatLogger;
         Games.Add(new("Pokémon Red", "PKMNRED.png", "GB"));
         Games.Add(new("Pokémon Blue", "PKMNBLUE.png", "GB"));
         Games.Add(new("Pokémon Yellow", "PKMNYELLOW.png", "GBC"));
@@ -56,11 +60,11 @@ public partial class MainViewModel : ViewModelBase
         {
             if (SettingsOptions.SelectedService == "Twitch")
             {
-                ChatService = new TwitchViewModel(SettingsOptions.Username);
+                ChatService = new TwitchViewModel(SettingsOptions.Username, _chatLogger);
             }
             else if (SettingsOptions.SelectedService == "YouTube")
             {
-                ChatService = new YoutubeViewModel(SettingsOptions.Username);
+                ChatService = new YoutubeViewModel(SettingsOptions.Username, _chatLogger);
             }
         }
     }
@@ -80,13 +84,13 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public void SaveSettings()
     {
-        if (SettingsOptions.SelectedService == "Twitch" && ChatService is not TwitchViewModel)
+        if (SettingsOptions.SelectedService == "Twitch")
         {
-            ChatService = new TwitchViewModel(SettingsOptions.Username);
+            ChatService = new TwitchViewModel(SettingsOptions.Username, _chatLogger);
         }
-        else if (SettingsOptions.SelectedService == "YouTube" && ChatService is not YoutubeViewModel)
+        else if (SettingsOptions.SelectedService == "YouTube")
         {
-            ChatService = new YoutubeViewModel(SettingsOptions.Username);
+            ChatService = new YoutubeViewModel(SettingsOptions.Username, _chatLogger);
         }
         SettingsOptions.SelectedGame = SelectedGame.GameName; 
         WriteSettings();
