@@ -5,7 +5,7 @@ using System.Text;
 
 namespace internetplays.Services
 {
-    public interface IChatLogger : IDisposable
+    public interface IChatLogger
     {
         void LogMessage(string message);
     }

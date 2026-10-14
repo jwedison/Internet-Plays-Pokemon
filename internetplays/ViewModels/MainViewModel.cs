@@ -86,10 +86,12 @@ public partial class MainViewModel : ViewModelBase
     {
         if (SettingsOptions.SelectedService == "Twitch")
         {
+            ChatService.Dispose();
             ChatService = new TwitchViewModel(SettingsOptions.Username, _chatLogger);
         }
         else if (SettingsOptions.SelectedService == "YouTube")
         {
+            ChatService.Dispose();
             ChatService = new YoutubeViewModel(SettingsOptions.Username, _chatLogger);
         }
         SettingsOptions.SelectedGame = SelectedGame.GameName; 

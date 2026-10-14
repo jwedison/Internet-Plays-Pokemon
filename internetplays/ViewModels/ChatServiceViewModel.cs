@@ -19,7 +19,7 @@ public class ChatServiceViewModel : ViewModelBase, IDisposable
 
     public ObservableCollection<MessageViewModel> Messages { get; set; }
 
-    internal readonly IChatLogger? _chatLogger;
+    internal IChatLogger? _chatLogger;
 
     public ChatServiceViewModel(string username, IChatLogger? chatLogger)
     {
@@ -29,7 +29,7 @@ public class ChatServiceViewModel : ViewModelBase, IDisposable
 
     public void Dispose()
     {
-        _chatLogger?.Dispose();
+        _chatLogger = null;
     }
 
 
