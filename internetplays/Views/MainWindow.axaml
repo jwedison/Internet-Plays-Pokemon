@@ -12,7 +12,7 @@
         Height="800">
     <Panel>
         <Border Background="{DynamicResource TwitchBackground}">
-            <Grid RowDefinitions="Auto, *">
+            <Grid RowDefinitions="Auto, *, Auto">
                 <Border Grid.Row="0">
                     <Grid RowDefinitions="Auto, Auto, *">
                         <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Text="Type in chat to play" FontSize="36"/>
@@ -61,6 +61,9 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
+                </Border>
+                <Border Grid.Row="2" Background="#222831"> 
+                     <TextBlock Grid.Row="6" Foreground="Gray" FontSize="12" Text="Version 2.0.0" HorizontalAlignment="Center" Margin="4"/>
                 </Border>
             </Grid>
         </Border>
