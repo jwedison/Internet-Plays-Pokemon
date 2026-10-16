@@ -16,7 +16,7 @@
                 <Border Grid.Row="0">
                     <Grid RowDefinitions="Auto, Auto, *">
                         <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Text="Type in chat to play" FontSize="36"/>
-                        <TextBlock Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Center" Text="A*5 presses A 5 times" FontSize="36"/>
+                        <TextBlock Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Center" Text="A*5, B*5 presses A 5 times, then B 5 times" FontSize="24"/>
                         <Grid ColumnDefinitions="Auto, *" Grid.Row="2">
                             <Button Cursor="Hand" Padding="0" Background="Transparent" Margin="10">
                                 <Image Grid.Column="0"  Width="120" Height="120" Source="{Binding SelectedGame.Image}" />

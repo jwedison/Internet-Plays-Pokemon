@@ -45,13 +45,36 @@ public class ChatServiceViewModel : ViewModelBase, IDisposable
             await HandleAdminCommand(message);
             return;
         }
+        if (msg.Split(",").Length > 1)
+        {
+            var commands = msg.Split(",");
+            if (commands.Length > 5 || (commands.Length > 3 && !message.IsAdmin)) return;
+            foreach (var command in commands)
+            {
+                var trimmedCommand = command.Trim();
+                var success = await HandleButtonPress(trimmedCommand);
+                if (!success)
+                {
+                    return;
+                }
+            }
+        }
+        else
+        {
+            await HandleButtonPress(msg);
+        }
+        
+    }
+
+    private async Task<bool> HandleButtonPress(string msg)
+    {
         if (Regex.IsMatch(msg, @"^([a|b]|start|select|up|down|left|right|l|r)\*?[0-9]?$", RegexOptions.IgnoreCase))
         {
-            Console.WriteLine($"Valid command received: {message.Message}");
+            Console.WriteLine($"Valid command received: {msg}");
 
-            if (message.Message.Contains("*"))
+            if (msg.Contains("*"))
             {
-                var parts = message.Message.Split('*');
+                var parts = msg.Split('*');
                 var command = CapitalizeFirstLetter(parts[0]);
                 if (int.TryParse(parts[1], out int repeatCount))
                 {
@@ -61,13 +84,15 @@ public class ChatServiceViewModel : ViewModelBase, IDisposable
                     }
                 }
             }
-            
+
             else
             {
                 var command = CapitalizeFirstLetter(msg);
                 await _gbaClient.PressKey(command);
             }
+            return true;
         }
+        return false;
     }
 
     private string CapitalizeFirstLetter(string input)
