@@ -26,11 +26,11 @@ namespace internetplays.Services
                 var request = new HttpRequestMessage(HttpMethod.Post, $"mgba-http/button/add?button={key}");
                 var response = await _client.SendAsync(request);
                 response.EnsureSuccessStatusCode();
-                await Task.Delay(250);
+                await Task.Delay(100);
                 request = new HttpRequestMessage(HttpMethod.Post, $"mgba-http/button/clear?button={key}");
                 response = await _client.SendAsync(request);
                 response.EnsureSuccessStatusCode();
-                await Task.Delay(100);
+                await Task.Delay(250);
             }
             catch (Exception e)
             {

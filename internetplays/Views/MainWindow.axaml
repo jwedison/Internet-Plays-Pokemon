@@ -63,7 +63,7 @@
                     </ScrollViewer>
                 </Border>
                 <Border Grid.Row="2" Background="#222831"> 
-                     <TextBlock Grid.Row="6" Foreground="Gray" FontSize="12" Text="Version 2.0.0" HorizontalAlignment="Center" Margin="4"/>
+                     <TextBlock Grid.Row="6" Foreground="Gray" FontSize="12" Text="Version 2.1.0" HorizontalAlignment="Center" Margin="4"/>
                 </Border>
             </Grid>
         </Border>
@@ -100,7 +100,7 @@
                         <Button DockPanel.Dock="Left" Background="RoyalBlue" Content="Save Settings" Margin="10" Command="{Binding SaveSettingsCommand}"/>
                         <Button DockPanel.Dock="Right" Content="Launch mGBA-http" Margin="10" Command="{Binding LaunchProgramsCommand}"/>
                     </DockPanel>
-                    <TextBlock Grid.Row="6" Foreground="Gray" FontSize="12" Text="Version 2.0.0" HorizontalAlignment="Center" Margin="10"/>
+                    <TextBlock Grid.Row="6" Foreground="Gray" FontSize="12" Text="Version 2.1.0" HorizontalAlignment="Center" Margin="10"/>
                 </Grid>
             </Border>
         </Popup>
