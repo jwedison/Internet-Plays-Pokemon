@@ -65,8 +65,8 @@
             </Grid>
         </Border>
         <Popup Placement="Center" IsOpen="{Binding SettingsOpen}">
-            <Border Background="Black" MinWidth="210">
-                <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto">
+            <Border Background="Black" Width="340">
+                <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto">
                     <DockPanel Grid.Row="0" LastChildFill="False">
                         <TextBlock DockPanel.Dock="Left" Text="Settings" FontSize="24" FontWeight="SemiBold" Margin="10"/>
                         <Button DockPanel.Dock="Right" Content="X" Command="{Binding CloseSettingsCommand}" Margin="10"/>
@@ -85,8 +85,19 @@
                         <TextBlock Text="Channel Username" FontSize="16" Margin="10"/>
                         <TextBox Text="{Binding SettingsOptions.Username}" FontSize="16" Margin="10, 1"/> 
                     </StackPanel>
-                    <Button Grid.Row="3" Background="RoyalBlue" Content="Save Settings" Margin="10" Command="{Binding SaveSettingsCommand}"/>
-                    <TextBlock Grid.Row="4" Foreground="Gray" FontSize="12" Text="Version 1.1.0" HorizontalAlignment="Center" Margin="10"/>
+                    <StackPanel Grid.Row="3">
+                        <TextBlock Text="mGBA path" FontSize="16" Margin="10"/>
+                        <TextBox Text="{Binding SettingsOptions.mGBAPath}" FontSize="16" Margin="10, 1"/> 
+                    </StackPanel>
+                    <StackPanel Grid.Row="4">
+                        <TextBlock Text="mGBA-http binary path" FontSize="16" Margin="10"/>
+                        <TextBox Text="{Binding SettingsOptions.mGBAHttpPath}" FontSize="16" Margin="10, 1"/> 
+                    </StackPanel>
+                    <DockPanel Grid.Row="5" LastChildFill="False">
+                        <Button DockPanel.Dock="Left" Background="RoyalBlue" Content="Save Settings" Margin="10" Command="{Binding SaveSettingsCommand}"/>
+                        <Button DockPanel.Dock="Right" Content="Launch mGBA-http" Margin="10" Command="{Binding LaunchProgramsCommand}"/>
+                    </DockPanel>
+                    <TextBlock Grid.Row="6" Foreground="Gray" FontSize="12" Text="Version 2.0.0" HorizontalAlignment="Center" Margin="10"/>
                 </Grid>
             </Border>
         </Popup>

@@ -19,7 +19,7 @@ public partial class YoutubeViewModel : ChatServiceViewModel
     private IYTLiveChat _chatClient;
 
 
-    public YoutubeViewModel(string username, IChatLogger? chatLogger) : base(username, chatLogger)
+    public YoutubeViewModel(string username, IChatLogger? chatLogger, GBAClient gbaClient) : base(username, chatLogger, gbaClient)
     {
         Messages = new();
 
@@ -48,7 +48,7 @@ public partial class YoutubeViewModel : ChatServiceViewModel
             var messageText = GetMessagePlainText(message.Message);
 
             var textColor = message.IsModerator ? "#5474cc" : message.IsOwner ? "#fcd330" : "#FFFFFF";
-            var msg = new MessageViewModel(username, messageText, textColor);
+            var msg = new MessageViewModel(username, messageText, textColor, message.IsModerator);
 
             _chatLogger?.LogMessage(msg.ToString());
             Messages.Add(msg);

@@ -23,7 +23,7 @@ public partial class TwitchViewModel : ChatServiceViewModel
     [ObservableProperty]
     private bool _isConnected = false;
 
-    public TwitchViewModel(string username, IChatLogger? chatLogger) : base(username, chatLogger)
+    public TwitchViewModel(string username, IChatLogger? chatLogger, GBAClient gbaClient) : base(username, chatLogger, gbaClient)
     {
         Messages = new();
 
@@ -58,7 +58,7 @@ public partial class TwitchViewModel : ChatServiceViewModel
     private async Task Client_OnMessageReceived(object? sender, OnMessageReceivedArgs e)
     {
         var message = e.ChatMessage;
-        var msg = new MessageViewModel(message.Username, message.Message, message.HexColor);
+        var msg = new MessageViewModel(message.Username, message.Message, message.HexColor, message.IsBroadcaster);
 
         Messages.Add(msg);
         _chatLogger?.LogMessage(msg.ToString());

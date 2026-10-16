@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -27,6 +28,8 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private bool _settingsOpen = false;
 
+    private GBAClient _gbaClient;
+
     public ObservableCollection<String> ChatServices { get; set; } = new() { "Twitch", "YouTube" };
 
     private static readonly string SettingsDir = Path.Combine(
@@ -40,9 +43,10 @@ public partial class MainViewModel : ViewModelBase
     private IChatLogger _chatLogger;
 
 
-    public MainViewModel(IChatLogger chatLogger)
+    public MainViewModel(IChatLogger chatLogger, GBAClient gbaClient)
     {
         _chatLogger = chatLogger;
+        _gbaClient = gbaClient;
         Games.Add(new("Pokémon Red", "PKMNRED.png", "GB"));
         Games.Add(new("Pokémon Blue", "PKMNBLUE.png", "GB"));
         Games.Add(new("Pokémon Yellow", "PKMNYELLOW.png", "GBC"));
@@ -60,13 +64,30 @@ public partial class MainViewModel : ViewModelBase
         {
             if (SettingsOptions.SelectedService == "Twitch")
             {
-                ChatService = new TwitchViewModel(SettingsOptions.Username, _chatLogger);
+                ChatService = new TwitchViewModel(SettingsOptions.Username, _chatLogger, _gbaClient);
             }
             else if (SettingsOptions.SelectedService == "YouTube")
             {
-                ChatService = new YoutubeViewModel(SettingsOptions.Username, _chatLogger);
+                ChatService = new YoutubeViewModel(SettingsOptions.Username, _chatLogger, _gbaClient);
             }
         }
+    }
+
+    [RelayCommand]
+    public void LaunchPrograms()
+    {
+        if (SettingsOptions.mGBAPath == null || SettingsOptions.mGBAHttpPath == null) return;
+
+        try
+        {
+            Process.Start(SettingsOptions.mGBAPath);
+            Process.Start(SettingsOptions.mGBAHttpPath);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Failed to launch programs: " + ex);
+        }
+
     }
 
     [RelayCommand]
@@ -87,12 +108,12 @@ public partial class MainViewModel : ViewModelBase
         if (SettingsOptions.SelectedService == "Twitch")
         {
             ChatService.Dispose();
-            ChatService = new TwitchViewModel(SettingsOptions.Username, _chatLogger);
+            ChatService = new TwitchViewModel(SettingsOptions.Username, _chatLogger, _gbaClient);
         }
         else if (SettingsOptions.SelectedService == "YouTube")
         {
             ChatService.Dispose();
-            ChatService = new YoutubeViewModel(SettingsOptions.Username, _chatLogger);
+            ChatService = new YoutubeViewModel(SettingsOptions.Username, _chatLogger, _gbaClient);
         }
         SettingsOptions.SelectedGame = SelectedGame.GameName; 
         WriteSettings();

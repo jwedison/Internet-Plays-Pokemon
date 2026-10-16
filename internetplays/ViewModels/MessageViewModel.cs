@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Media.Immutable;
@@ -19,11 +20,15 @@ public partial class MessageViewModel : ViewModelBase
     [ObservableProperty]
     private string _usernameColor;
 
-    public MessageViewModel(string username, string message, string color = "#FFFFFF")
+    [ObservableProperty]
+    private bool _isAdmin;
+
+    public MessageViewModel(string username, string message, string color = "#FFFFFF", bool isAdmin = false)
     {
         Username = username;
         Message = message;
         UsernameColor = color;
+        IsAdmin = isAdmin;
     }
 
     public override string ToString()
