@@ -6,12 +6,13 @@
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
 	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-	<Version>2.1.0</Version>
+	<Version>2.2.0</Version>
 	<PackageIcon>pokeball.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Assets\GameImages\" />
+    <Folder Include="Assets\Pokemon\" />
     <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
