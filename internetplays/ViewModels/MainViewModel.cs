@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -32,6 +34,8 @@ public partial class MainViewModel : ViewModelBase
 
     public ObservableCollection<String> ChatServices { get; set; } = new() { "Twitch", "YouTube" };
 
+    public ObservableCollection<PokemonViewModel> PokemonParty { get; set; } = new();
+
     private static readonly string SettingsDir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "InternetPlays");
@@ -42,6 +46,7 @@ public partial class MainViewModel : ViewModelBase
 
     private IChatLogger _chatLogger;
 
+    private PeriodicTimer _timer;
 
     public MainViewModel(IChatLogger chatLogger, GBAClient gbaClient)
     {
@@ -74,7 +79,7 @@ public partial class MainViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void LaunchPrograms()
+    public async Task LaunchPrograms()
     {
         if (SettingsOptions.mGBAPath == null || SettingsOptions.mGBAHttpPath == null) return;
 
@@ -88,6 +93,24 @@ public partial class MainViewModel : ViewModelBase
             Console.WriteLine("Failed to launch programs: " + ex);
         }
 
+        await HandleTimer();
+    }
+
+    private async Task HandleTimer()
+    {
+        if (_timer is null) _timer = new(TimeSpan.FromMinutes(1));
+        while (await _timer.WaitForNextTickAsync()) 
+        {
+            var party = await _gbaClient.GetPartyRed();
+
+            if (party.Count() == 0) break;
+
+            PokemonParty.Clear();
+            foreach (var pokemon in party)
+            {
+                PokemonParty.Add(pokemon);
+            }
+        }
     }
 
     [RelayCommand]
