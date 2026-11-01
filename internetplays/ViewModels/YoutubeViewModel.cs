@@ -52,6 +52,10 @@ public partial class YoutubeViewModel : ChatServiceViewModel
 
             _chatLogger?.LogMessage(msg.ToString());
             Messages.Add(msg);
+            if (Messages.Count > 100)
+            {
+                Messages.RemoveAt(0);
+            }
             await HandleCommand(msg);
         }
     }

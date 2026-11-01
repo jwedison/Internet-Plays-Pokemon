@@ -61,6 +61,10 @@ public partial class TwitchViewModel : ChatServiceViewModel
         var msg = new MessageViewModel(message.Username, message.Message, message.HexColor, message.IsBroadcaster);
 
         Messages.Add(msg);
+        if (Messages.Count > 100)
+        {
+            Messages.RemoveAt(0);
+        }
         _chatLogger?.LogMessage(msg.ToString());
 
         await HandleCommand(msg);
