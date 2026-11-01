@@ -12,6 +12,7 @@ using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using internetplays.Services;
+using SkiaSharp;
 
 namespace internetplays.ViewModels;
 
@@ -21,8 +22,8 @@ public partial class MainViewModel : ViewModelBase
     private ChatServiceViewModel _chatService;
 
     public ObservableCollection<GameSelectViewModel> Games { get; set; } = new();
-    [ObservableProperty]
-    private GameSelectViewModel _selectedGame;
+    //[ObservableProperty]
+    //private GameSelectViewModel _selectedGame;
 
     [ObservableProperty]
     private SettingsOptionsViewModel _settingsOptions = new();
@@ -34,7 +35,8 @@ public partial class MainViewModel : ViewModelBase
 
     public ObservableCollection<String> ChatServices { get; set; } = new() { "Twitch", "YouTube" };
 
-    public ObservableCollection<PokemonViewModel> PokemonParty { get; set; } = new();
+    [ObservableProperty]
+    private TrainerViewModel _trainer;
 
     private static readonly string SettingsDir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -99,18 +101,62 @@ public partial class MainViewModel : ViewModelBase
     private async Task HandleTimer()
     {
         if (_timer is null) _timer = new(TimeSpan.FromMinutes(1));
-        while (await _timer.WaitForNextTickAsync()) 
+        while (await _timer.WaitForNextTickAsync())
         {
-            var party = await _gbaClient.GetPartyRed();
-
-            if (party.Count() == 0) break;
-
-            PokemonParty.Clear();
-            foreach (var pokemon in party)
+            switch (Trainer.Game.GameName)
             {
-                PokemonParty.Add(pokemon);
+                case "Pokémon Red":
+                case "Pokémon Blue":
+                    await GetTrainerDataRB();
+                    break;
+                case "Pokémon Gold":
+                case "Pokémon Silver":
+                    await GetTrainerDataGS();
+                    break;
+                //case "Pokémon Crystal":
+                //    await GetTrainerDataCrystal();
+                //    break;
+
             }
         }
+    }
+
+    private async Task GetTrainerDataRB()
+    {
+        var party = await _gbaClient.GetPartyRed();
+        var playerName = await _gbaClient.GetPlayerNameRed();
+        var badges = await _gbaClient.GetBadgesRed();
+
+        SetTrainerData(playerName, party, badges);
+    }
+
+    private async Task GetTrainerDataGS()
+    {
+        var party = await _gbaClient.GetPartyGold();
+        var playerName = await _gbaClient.GetPlayerNameGold();
+        var badges = await _gbaClient.GetBadgesGold();
+
+        SetTrainerData(playerName, party, badges);
+    }
+
+    private void SetTrainerData(string playerName, List<PokemonViewModel> party, char[] badges)
+    {
+        Trainer.Name = playerName;
+        Trainer.Party.Clear();
+        foreach (var pokemon in party)
+        {
+            Trainer.Party.Add(pokemon);
+        }
+        Trainer.HasBadge1 = badges[7] == '1';
+        Trainer.HasBadge2 = badges[6] == '1';
+        Trainer.HasBadge3 = badges[5] == '1';
+        Trainer.HasBadge4 = badges[4] == '1';
+        Trainer.HasBadge5 = badges[3] == '1';
+        Trainer.HasBadge6 = badges[2] == '1';
+        Trainer.HasBadge7 = badges[1] == '1';
+        Trainer.HasBadge8 = badges[0] == '1';
+
+        Trainer.UpdateBadgeImages();
     }
 
     [RelayCommand]
@@ -138,7 +184,7 @@ public partial class MainViewModel : ViewModelBase
             ChatService.Dispose();
             ChatService = new YoutubeViewModel(SettingsOptions.Username, _chatLogger, _gbaClient);
         }
-        SettingsOptions.SelectedGame = SelectedGame.GameName; 
+        SettingsOptions.SelectedGame = Trainer.Game.GameName; 
         WriteSettings();
     }
 
@@ -148,7 +194,7 @@ public partial class MainViewModel : ViewModelBase
         {
             SettingsOptions = new();
             SettingsOptions.SelectedGame = Games[0].GameName;
-            SelectedGame = Games[0];
+            Trainer = new TrainerViewModel("", Games[0]);
             SettingsOptions.SelectedService = "Twitch";
             SettingsOptions.Username = "";
         } 
@@ -158,13 +204,13 @@ public partial class MainViewModel : ViewModelBase
             try
             {
                 SettingsOptions = JsonSerializer.Deserialize<SettingsOptionsViewModel>(json);
-                SelectedGame = Games.FirstOrDefault(game => game.GameName == SettingsOptions.SelectedGame);
+                Trainer = new TrainerViewModel("", Games.FirstOrDefault(game => game.GameName == SettingsOptions.SelectedGame));
             }
             catch (Exception ex)
             {
                 SettingsOptions = new();
                 SettingsOptions.SelectedGame = Games[0].GameName;
-                SelectedGame = Games[0];
+                Trainer = new TrainerViewModel("", Games[0]);
                 SettingsOptions.SelectedService = "Twitch";
                 SettingsOptions.Username = "";
             }

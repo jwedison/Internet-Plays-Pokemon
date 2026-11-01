@@ -13,10 +13,10 @@ public partial class PokemonViewModel : ViewModelBase
     [ObservableProperty]
     private Bitmap _image;
 
-    public PokemonViewModel(string name, string nickname)
+    public PokemonViewModel(string name, string nickname, string game)
     {
         Name = nickname;
-        var assetUri = new System.Uri("avares://internetplays/Assets/Pokemon/" + name + ".png");
+        var assetUri = new System.Uri($"avares://internetplays/Assets/Pokemon/{game}/{name}.png");
         Image = new Bitmap(AssetLoader.Open(assetUri));
     }
 }

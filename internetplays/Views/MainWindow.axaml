@@ -17,12 +17,12 @@
                     <Grid RowDefinitions="Auto, Auto, *">
                         <TextBlock Grid.Row="0" TextWrapping="Wrap" HorizontalAlignment="Center" Text="Type in chat to play" FontSize="36"/>
                         <TextBlock Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Center" Text="A*5, B*5 presses A 5 times, then B 5 times" FontSize="24"/>
-                        <Grid ColumnDefinitions="Auto, *" Grid.Row="2">
+                        <Grid ColumnDefinitions="Auto, Auto, *" Grid.Row="2">
                             <Button Cursor="Hand" Padding="0" Background="Transparent" Margin="10">
-                                <Image Grid.Column="0"  Width="120" Height="120" Source="{Binding SelectedGame.Image}" />
+                                <Image Grid.Column="0"  Width="120" Height="120" Source="{Binding Trainer.Game.Image}" />
                                 <Button.Flyout>
                                     <Flyout>
-                                        <ListBox ItemsSource="{Binding Games}" SelectedItem="{Binding SelectedGame}">
+                                        <ListBox ItemsSource="{Binding Games}" SelectedItem="{Binding Trainer.Game}">
                                             <ListBox.ItemTemplate>
                                               <DataTemplate>
                                                 <Grid ColumnDefinitions="Auto, *">
@@ -40,8 +40,24 @@
                             </Button>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="5">
                                 <TextBlock Foreground="Gold" HorizontalAlignment="Left" FontWeight="SemiBold" FontSize="24" Text="Current Game"/>
-                                <TextBlock Foreground="White" HorizontalAlignment="Left" FontSize="24" Text="{Binding SelectedGame.GameName}"/>
+                                <TextBlock Foreground="White" HorizontalAlignment="Left" FontSize="24" Text="{Binding Trainer.Game.GameName}"/>
                             </StackPanel>
+                            <Grid Grid.Column="2" RowDefinitions="Auto, *" VerticalAlignment="Center" HorizontalAlignment="Right"> 
+                                <TextBlock Grid.Row="0" Foreground="White" FontSize="16" Text="{Binding Trainer.Name}" HorizontalAlignment="Center"/>
+                                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                    <Image Width="64" Height="64" Source="{Binding Trainer.PlayerImage}" VerticalAlignment="Center"/>
+                                    <Grid Grid.Column="1" RowDefinitions="32, 32" ColumnDefinitions="32, 32, 32, 32" VerticalAlignment="Center" Margin="0, 0, 20, 0">
+                                        <Image Grid.Row="0" Grid.Column="0" Source="{Binding Trainer.Badge1}"/>
+                                        <Image Grid.Row="0" Grid.Column="1" Source="{Binding Trainer.Badge2}"/>
+                                        <Image Grid.Row="0" Grid.Column="2" Source="{Binding Trainer.Badge3}"/>
+                                        <Image Grid.Row="0" Grid.Column="3" Source="{Binding Trainer.Badge4}"/>
+                                        <Image Grid.Row="1" Grid.Column="0" Source="{Binding Trainer.Badge5}"/>
+                                        <Image Grid.Row="1" Grid.Column="1" Source="{Binding Trainer.Badge6}"/>
+                                        <Image Grid.Row="1" Grid.Column="2" Source="{Binding Trainer.Badge7}"/>
+                                        <Image Grid.Row="1" Grid.Column="3" Source="{Binding Trainer.Badge8}"/>
+                                    </Grid>
+                                </StackPanel>    
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Border>
@@ -63,7 +79,7 @@
                     </ScrollViewer>
                 </Border>
                 <Border Grid.Row="2" Background="#222831" HorizontalAlignment="Stretch">
-                    <ItemsControl ItemsSource="{Binding PokemonParty}" HorizontalAlignment="Center">
+                    <ItemsControl ItemsSource="{Binding Trainer.Party}" HorizontalAlignment="Center">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel Orientation="Horizontal" />
@@ -82,7 +98,7 @@
                     </ItemsControl>
                 </Border>
                 <Border Grid.Row="3" Background="#222831"> 
-                     <TextBlock Grid.Row="6" Foreground="Gray" FontSize="12" Text="Version 2.2.0" HorizontalAlignment="Center" Margin="4"/>
+                     <TextBlock Grid.Row="6" Foreground="Gray" FontSize="12" Text="Version 3.0.0" HorizontalAlignment="Center" Margin="4"/>
                 </Border>
             </Grid>
         </Border>
@@ -119,7 +135,7 @@
                         <Button DockPanel.Dock="Left" Background="RoyalBlue" Content="Save Settings" Margin="10" Command="{Binding SaveSettingsCommand}"/>
                         <Button DockPanel.Dock="Right" Content="Launch mGBA-http" Margin="10" Command="{Binding LaunchProgramsCommand}"/>
                     </DockPanel>
-                    <TextBlock Grid.Row="6" Foreground="Gray" FontSize="12" Text="Version 2.2.0" HorizontalAlignment="Center" Margin="10"/>
+                    <TextBlock Grid.Row="6" Foreground="Gray" FontSize="12" Text="Version 3.0.0" HorizontalAlignment="Center" Margin="10"/>
                 </Grid>
             </Border>
         </Popup>
